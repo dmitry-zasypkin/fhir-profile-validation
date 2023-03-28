@@ -1,4 +1,4 @@
-FROM intersystemsdc/jgw:latest
+FROM openjdk:8 AS builder
 
 ARG SRCDIR=/tmp/src
 ARG GWDIR=/jgw
@@ -13,3 +13,9 @@ WORKDIR $SRCDIR
 RUN javac -classpath $GWDIR/* isc/ateam/fhir/JavaValidatorFacade.java && \
     jar -cvf $GWDIR/JavaValidatorFacade.jar isc/ateam/fhir/JavaValidatorFacade.class && \
     ls -al isc/ateam/fhir
+
+FROM intersystemsdc/jgw:2021.2
+
+COPY --from=builder /tmp/app/jar/*.jar $GWDIR/
+
+COPY *.properties $GWDIR/
