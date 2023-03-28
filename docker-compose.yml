@@ -1,0 +1,27 @@
+version: '3.6'
+services:
+  jgw:
+    build:
+      context: jgw
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - {$JAVA_GATEWAY}:55555
+  iris:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAVA_GATEWAY_PORT: ${JAVA_GATEWAY}
+        JAVA_GATEWAY_HOST: jgw
+    restart: always
+    command: --check-caps false
+    ports: 
+      - 32782:1972
+      - 32783:52773
+      - 32784:53773
+    volumes:
+      - ./:/irisdev/app
+    command: 
+      - -a
+      - iris session iris -U%SYS '##class(Security.Users).UnExpireUserPasswords("*")'

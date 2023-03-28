@@ -1,0 +1,36 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "name": "BirthSex",
+  "id": "birthsex-valueset",
+  "title": "Birth Sex",
+  "description": "Codes for assigning sex at birth",
+  "version": "0.1.0",
+  "url": "http://intersystems.com/fhir/Example/ValueSet/birthsex-valueset",
+  "compose": {
+    "include": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+        "concept": [
+          {
+            "code": "M",
+            "display": "Male"
+          },
+          {
+            "code": "F",
+            "display": "Female"
+          }
+        ]
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+        "concept": [
+          {
+            "code": "UNK",
+            "display": "Unknown"
+          }
+        ]
+      }
+    ]
+  }
+}
