@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports: 
-      - {$JAVA_GATEWAY}:55555
+      - ${JAVA_GATEWAY}:55555
   iris:
     build: 
       context: .

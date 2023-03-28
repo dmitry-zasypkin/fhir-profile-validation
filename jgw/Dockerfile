@@ -3,7 +3,7 @@ FROM intersystemsdc/jgw:latest
 ARG SRCDIR=/tmp/src
 ARG GWDIR=/jgw
 
-COPY ../src/java $SRCDIR
+COPY src $SRCDIR
 
 WORKDIR $GWDIR
 ADD https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar .

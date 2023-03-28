@@ -14,21 +14,11 @@ ClassMethod setup(
 {
 	new $namespace
 
-	// Import class HS.Local.Util.FoundationInstaller
-	zn "HSCUSTOM"
-	$$$QuitOnError($System.OBJ.Load(repoRoot _ "/src/cls/HS/Local/Util/FoundationInstaller.cls", "ck"))
-
-	// Install a Foundation namespace with a separate db for program code
+	// Install a Foundation namespace
 	zn "HSLIB"
 	kill vars
-	set vars("CodeDBName") = namespace _ "CODE"  // name for program code database to be created
 	//set vars("Production") = productionClass
-	$$$QuitOnError(##class(HS.Local.Util.FoundationInstaller).Install(namespace, .vars))
-	
-	// Change security resource of the program code database we've just created
-	//  (in order to have the same security resource for both data and program code DBs)
-	zn "%SYS"
-	$$$QuitOnError(##class(SYS.Database).ModifyDatabase($system.Util.ManagerDirectory() _ namespace _ "CODE",, "%DB_" _ namespace))
+	$$$QuitOnError(##class(HS.Util.Installer.Foundation).Install(namespace, .vars))
 	
 	// Change to the new ns
 	zn namespace
@@ -40,7 +30,7 @@ ClassMethod setup(
 	$$$QuitOnError($System.OBJ.LoadDir(repoRoot _ "/src/cls", "ck", ,1))
 		
 	// Install an instance of a FHIR Service into the current namespace
-	do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages)
+	do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages,,, 0)  // 0 = do not create separate databases for the FHIR data
 
 	// Configure FHIR Service instance to accept unauthenticated requests
 	#dim strategy As HS.FHIRServer.API.InteractionsStrategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(appKey)
