@@ -3,7 +3,7 @@ Class isc.ateam.fhir.validation.FHIRValidationRepoManager Extends HS.FHIRServer.
 
 Parameter StrategyClass = "isc.ateam.fhir.validation.FHIRValidationInteractionsStrategy";
 
-Parameter StrategyKey = "isc.ateam.fhir.validation.FHIRValidationInteractionsStrategy";
+Parameter StrategyKey = "FHIRValidationInteractionsStrategy";
 
 }
 
