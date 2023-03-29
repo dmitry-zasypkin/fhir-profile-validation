@@ -27,8 +27,8 @@ RUN \
   set strategyClass = "isc.ateam.fhir.validation.FHIRValidationInteractionsStrategy" \
   set metadataPackages = $lb("hl7.fhir.r4.core@4.0.1") \
   set fhirValidationIGList = "/irisdev/app/profile" \
-  set fhirValidationJavaGatewayServer = "${JAVA_GATEWAY_HOST}" \
-  set fhirValidationJavaGatewayPort = "${JAVA_GATEWAY_PORT}" \
+  set fhirValidationJavaGatewayServer = $System.Util.GetEnviron("JAVA_GATEWAY_HOST") \
+  set fhirValidationJavaGatewayPort = $System.Util.GetEnviron("JAVA_GATEWAY_PORT") \
   set fhirValidationTerminologyServer = "" \
   set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackages, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationTerminologyServer)
 
