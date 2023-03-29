@@ -1,7 +1,7 @@
+FROM intersystemsdc/irishealth-community:latest
+
 ARG JAVA_GATEWAY_PORT
 ARG JAVA_GATEWAY_HOST
-
-FROM intersystemsdc/irishealth-community:latest
 
 USER root
 
