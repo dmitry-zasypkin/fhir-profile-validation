@@ -51,20 +51,6 @@ ClassMethod setup(
 	if '##class(%File).DirectoryExists(dataDir) set dataDir = repoRoot _ "/data/fhir/"
 	$$$QuitOnError(##class(HS.FHIRServer.Tools.DataLoader).SubmitResourceFiles(dataDir, "FHIRServer", appKey))
 	*/
-	
-	/* Uncomment the following code if using Durable %SYS
-	
-	// Mark program code database read-only in order to keep it inside the container
-	zn "%SYS"
-	set dbDir = $piece(##class(Config.Databases).DatabaseByName(namespace _ "CODE"), "^", *)
-	write "Code database dir: " _ dbDir,!
-
-	set db = ##class(SYS.Database).%OpenId(dbDir,, .sc)
-	$$$QuitOnError(sc)
-	set db.ReadOnly = 1
-	set db.ResourceName = "%DB_"_$ZCVT(namespace,"U")
-	$$$QuitOnError(db.%Save())
-	*/
 
 	quit $$$OK
 }
