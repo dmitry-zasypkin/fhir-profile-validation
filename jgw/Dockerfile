@@ -11,9 +11,9 @@ ADD https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/valid
 
 WORKDIR $SRCDIR
 
-RUN javac -classpath $GWDIR/* isc/ateam/fhir/JavaValidatorFacade.java && \
-    jar -cvf $GWDIR/JavaValidatorFacade.jar isc/ateam/fhir/JavaValidatorFacade.class && \
-    ls -al isc/ateam/fhir
+RUN javac -classpath $GWDIR/* isc/ateam/fhir/validation/JavaValidatorFacade.java && \
+    jar -cvf $GWDIR/JavaValidatorFacade.jar isc/ateam/fhir/validation/JavaValidatorFacade.class && \
+    ls -al isc/ateam/fhir/validation
 
 ENV ISC_JARDIR /usr/irissys/dev/java/lib/1.8
 
