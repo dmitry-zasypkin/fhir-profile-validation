@@ -7,6 +7,8 @@ services:
     restart: always
     ports: 
       - ${JAVA_GATEWAY}:55555
+    volumes:
+      - ./:/irisdev/app
   iris:
     build: 
       context: .
@@ -20,8 +22,6 @@ services:
       - 32782:1972
       - 32783:52773
       - 32784:53773
-    volumes:
-      - ./:/irisdev/app
     command: 
       - -a
       - iris session iris -U%SYS '##class(Security.Users).UnExpireUserPasswords("*")'
