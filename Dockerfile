@@ -2,6 +2,8 @@ FROM intersystemsdc/irishealth-community:latest
 
 ARG JAVA_GATEWAY_PORT
 ARG JAVA_GATEWAY_HOST
+ARG FHIR_TERMINOLOGY_SERVER
+ARG FHIR_IG_LIST
 
 USER root
 
@@ -26,10 +28,10 @@ RUN \
   set appKey = "/fhir-validation" \
   set strategyClass = "isc.ateam.fhir.validation.FHIRValidationInteractionsStrategy" \
   set metadataPackages = $lb("hl7.fhir.r4.core@4.0.1") \
-  set fhirValidationIGList = "/irisdev/app/profile" \
+  set fhirValidationIGList = $System.Util.GetEnviron("FHIR_IG_LIST") \
   set fhirValidationJavaGatewayServer = $System.Util.GetEnviron("JAVA_GATEWAY_HOST") \
   set fhirValidationJavaGatewayPort = $System.Util.GetEnviron("JAVA_GATEWAY_PORT") \
-  set fhirValidationTerminologyServer = "" \
+  set fhirValidationTerminologyServer = $System.Util.GetEnviron("FHIR_TERMINOLOGY_SERVER") \
   set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackages, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationTerminologyServer)
 
 # bringing the standard shell back

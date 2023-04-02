@@ -8,7 +8,7 @@ services:
     ports: 
       - ${JAVA_GATEWAY}:55555
     volumes:
-      - ./:/irisdev/app
+      - ./profile:/irisdev/profile
   iris:
     build: 
       context: .
@@ -16,6 +16,8 @@ services:
       args:
         JAVA_GATEWAY_PORT: ${JAVA_GATEWAY}
         JAVA_GATEWAY_HOST: jgw
+        FHIR_TERMINOLOGY_SERVER: ${FHIR_TERMINOLOGY_SERVER}
+        FHIR_IG_LIST: /irisdev/profile
     restart: always
     command: --check-caps false
     ports: 
