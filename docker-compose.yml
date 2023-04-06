@@ -18,12 +18,19 @@ services:
         JAVA_GATEWAY_HOST: jgw
         FHIR_TERMINOLOGY_SERVER: ${FHIR_TERMINOLOGY_SERVER}
         FHIR_IG_LIST: /irisdev/profile
+        DURABLE_SYS_DIR: /iris/durable
     restart: always
     command: --check-caps false
     ports: 
       - 32782:1972
       - 32783:52773
       - 32784:53773
+    volumes:
+      - iris-durable:/iris
+    environment:
+      - ISC_DATA_DIRECTORY=/iris/durable
     command: 
       - -a
       - iris session iris -U%SYS '##class(Security.Users).UnExpireUserPasswords("*")'
+volumes:
+  iris-durable:
