@@ -1,0 +1,212 @@
+{
+	"info": {
+		"_postman_id": "7e3afd99-a76c-4f5d-87ac-0a39c6461a63",
+		"name": "fhir-profile-validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Patient",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "default"
+					},
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Patient\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://intersystems.com/fhir/Example/StructureDefinition/MyPatient\"\r\n    ]\r\n  },\r\n  \"extension\": [\r\n    {\r\n      \"url\": \"http://intersystems.com/fhir/Example/StructureDefinition/birthsex-extension\",\r\n      \"valueCode\": \"F\"\r\n    }\r\n  ],\r\n  \"name\": [\r\n    {\r\n      \"given\": [\r\n        \"Janette\"\r\n      ],\r\n      \"family\": \"Smith\"\r\n    }\r\n  ],\r\n  \"maritalStatus\": {\r\n    \"coding\": [\r\n      {\r\n        \"code\": \"M\",\r\n        \"system\": \"http://terminology.hl7.org/CodeSystem/v3-MaritalStatus\",\r\n        \"display\": \"Married\"\r\n      }\r\n    ]\r\n  }\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{url}}/Patient",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Patient"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bundle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "default"
+					},
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Bundle\",\r\n  \"meta\": {\r\n    \"profile\": [\r\n      \"http://intersystems.com/fhir/Example/StructureDefinition/MyBundle\"\r\n    ]\r\n  },\r\n  \"type\": \"transaction\",\r\n  \"entry\": [\r\n    {\r\n      \"fullUrl\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd9d4\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"meta\": {\r\n          \"profile\": [\r\n            \"http://intersystems.com/fhir/Example/StructureDefinition/MyPatient\"\r\n          ]\r\n        },\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://intersystems.com/fhir/Example/StructureDefinition/birthsex-extension\",\r\n            \"valueCode\": \"F\"\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"given\": [\r\n              \"Janette\"\r\n            ],\r\n            \"family\": \"Smith\"\r\n          }\r\n        ],\r\n        \"maritalStatus\": {\r\n          \"coding\": [\r\n            {\r\n              \"code\": \"M\",\r\n              \"system\": \"http://terminology.hl7.org/CodeSystem/v3-MaritalStatus\",\r\n              \"display\": \"Married\"\r\n            }\r\n          ]\r\n        }\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"Patient\"\r\n      }\r\n    },\r\n    {\r\n      \"fullUrl\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd555\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Observation\",\r\n        \"status\": \"final\",\r\n        \"code\": {\r\n          \"coding\": [\r\n            {\r\n              \"code\": \"15074-8\",\r\n              \"system\": \"http://loinc.org\",\r\n              \"display\": \"Glucose [Moles/volume] in Blood\"\r\n            }\r\n          ]\r\n        },\r\n        \"subject\": {\r\n          \"reference\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd9d4\"\r\n        }\r\n      },\r\n      \"request\": {\r\n        \"method\": \"POST\",\r\n        \"url\": \"Observation\"\r\n      }\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patient/$validate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "default"
+					},
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Parameters\",\r\n  \"parameter\": [\r\n    {\r\n      \"name\": \"profile\",\r\n      \"valueCanonical\": \"http://intersystems.com/fhir/Example/StructureDefinition/MyPatient\"\r\n    },\r\n    {\r\n      \"name\": \"resource\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Patient\",\r\n        \"extension\": [\r\n          {\r\n            \"url\": \"http://intersystems.com/fhir/Example/StructureDefinition/birthsex-extension\",\r\n            \"valueCode\": \"F\"\r\n          }\r\n        ],\r\n        \"name\": [\r\n          {\r\n            \"given\": [\r\n              \"Janette\"\r\n            ],\r\n            \"family\": \"Smith\"\r\n          }\r\n        ],\r\n        \"maritalStatus\": {\r\n          \"coding\": [\r\n            {\r\n              \"code\": \"M\",\r\n              \"system\": \"http://terminology.hl7.org/CodeSystem/v3-MaritalStatus\",\r\n              \"display\": \"Married\"\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  ]\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/Patient/$validate",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Patient",
+						"$validate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bundle/$validate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "default"
+					},
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Parameters\",\r\n  \"parameter\": [\r\n    {\r\n      \"name\": \"profile\",\r\n      \"valueCanonical\": \"http://intersystems.com/fhir/Example/StructureDefinition/MyBundle\"\r\n    },\r\n    {\r\n      \"name\": \"resource\",\r\n      \"resource\": {\r\n        \"resourceType\": \"Bundle\",\r\n        \"type\": \"transaction\",\r\n        \"entry\": [\r\n          {\r\n            \"fullUrl\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd9d4\",\r\n            \"resource\": {\r\n              \"resourceType\": \"Patient\",\r\n              \"extension\": [\r\n                {\r\n                  \"url\": \"http://intersystems.com/fhir/Example/StructureDefinition/birthsex-extension\",\r\n                  \"valueCode\": \"F\"\r\n                }\r\n              ],\r\n              \"name\": [\r\n                {\r\n                  \"given\": [\r\n                    \"Janette\"\r\n                  ],\r\n                  \"family\": \"Smith\"\r\n                }\r\n              ],\r\n              \"maritalStatus\": {\r\n                \"coding\": [\r\n                  {\r\n                    \"code\": \"M\",\r\n                    \"system\": \"http://terminology.hl7.org/CodeSystem/v3-MaritalStatus\",\r\n                    \"display\": \"Married\"\r\n                  }\r\n                ]\r\n              }\r\n            },\r\n            \"request\": {\r\n              \"method\": \"POST\",\r\n              \"url\": \"Patient\"\r\n            }\r\n          },\r\n          {\r\n            \"fullUrl\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd555\",\r\n            \"resource\": {\r\n              \"resourceType\": \"Observation\",\r\n              \"status\": \"final\",\r\n              \"code\": {\r\n                \"coding\": [\r\n                  {\r\n                    \"code\": \"15074-8\",\r\n                    \"system\": \"http://loinc.org\",\r\n                    \"display\": \"Glucose [Moles/volume] in Blood\"\r\n                  }\r\n                ]\r\n              },\r\n              \"subject\": {\r\n                \"reference\": \"urn:uuid:6a79bb01-6289-4665-a23c-f0f0704dd9d4\"\r\n              }\r\n            },\r\n            \"request\": {\r\n              \"method\": \"POST\",\r\n              \"url\": \"Observation\"\r\n            }\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  ]\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/Bundle/$validate",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Bundle",
+						"$validate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patient",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/Patient",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Patient"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Observation",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/fhir+json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/Observation",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"Observation"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:32783/fhir-validation",
+			"type": "default"
+		}
+	]
+}
