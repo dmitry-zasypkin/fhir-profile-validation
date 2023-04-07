@@ -1,6 +1,6 @@
 Include HS.FHIRServer
 
-Class isc.ateam.fhir.validation.FHIRValidation [ Abstract ]
+Class isc.ateam.validation.FHIRValidation [ Abstract ]
 {
 
 Parameter SkipIfNoProfileKEY = "/FHIR/Validation/SkipIfNoProfile";
@@ -79,9 +79,9 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	$$$ThrowOnError(gw.%Connect(javaGatewayServer, javaGatewayPort))
 	
 	// generate proxy class if it's not present
-	if '$$$comClassDefined("isc.ateam.fhir.validation.JavaValidatorFacade")
+	if '$$$comClassDefined("isc.ateam.validation.JavaValidatorFacade")
 	{
-		do ##class(%Net.Remote.Java.JavaGateway).%ExpressImport("isc.ateam.fhir.validation.JavaValidatorFacade", javaGatewayPort, javaGatewayServer, $$$YES)
+		do ##class(%Net.Remote.Java.JavaGateway).%ExpressImport("isc.ateam.validation.JavaValidatorFacade", javaGatewayPort, javaGatewayServer, $$$YES)
 	}
 
 	#dim jsonIn As %Stream.TmpBinary = ##class(%Stream.TmpBinary).%New()
@@ -92,7 +92,7 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	try
 	{
 		$$$FSLog("About to call Java validator...")
-		set jsonOut = ##class(isc.ateam.fhir.validation.JavaValidatorFacade).validate(gw, igList, jsonIn, terminologyServer, profileToValidateAgainst)
+		set jsonOut = ##class(isc.ateam.validation.JavaValidatorFacade).validate(gw, igList, jsonIn, terminologyServer, profileToValidateAgainst)
 	}
 	catch ex
 	{

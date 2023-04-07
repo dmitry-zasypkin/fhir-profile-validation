@@ -1,4 +1,4 @@
-Class isc.ateam.fhir.validation.FHIRResourceValidator Extends HS.FHIRServer.Util.ResourceValidator
+Class isc.ateam.validation.FHIRResourceValidator Extends HS.FHIRServer.Util.ResourceValidator
 {
 
 /// @API
@@ -15,7 +15,7 @@ Method ValidateResource(pResourceObject As %DynamicObject, pIsInTransaction As %
 	
 	if (pIsInTransaction '= $$$YES)
 	{
-		do ##class(isc.ateam.fhir.validation.FHIRValidation).validate(pResourceObject)
+		do ##class(isc.ateam.validation.FHIRValidation).validate(pResourceObject)
 	}
 }
 

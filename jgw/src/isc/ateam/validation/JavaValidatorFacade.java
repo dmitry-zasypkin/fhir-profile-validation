@@ -1,4 +1,4 @@
-package isc.ateam.fhir.validation;
+package isc.ateam.validation;
 
 import java.util.*;
 import java.io.*;

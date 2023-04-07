@@ -27,7 +27,7 @@ RUN \
   set repoRoot = $system.Process.CurrentDirectory() \
   set namespace = "FHIRSERVER" \
   set appKey = "/fhir-validation" \
-  set strategyClass = "isc.ateam.fhir.validation.FHIRValidationInteractionsStrategy" \
+  set strategyClass = "isc.ateam.validation.FHIRValidationInteractionsStrategy" \
   set metadataPackages = $lb("hl7.fhir.r4.core@4.0.1") \
   set fhirValidationIGList = $System.Util.GetEnviron("FHIR_IG_LIST") \
   set fhirValidationJavaGatewayServer = $System.Util.GetEnviron("JAVA_GATEWAY_HOST") \
