@@ -34,7 +34,8 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/JavaGatewayServer', :fhirValidationJavaGatewayServer))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/JavaGatewayPort', :fhirValidationJavaGatewayPort))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/TerminologyServer', :fhirValidationTerminologyServer))
-	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', '1'))
+	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', null))
+	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/DefaultProfile/Patient', null))
 		
 	// Install an instance of a FHIR Service into the current namespace
 	do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages,,, 0)  // 0 = do not create separate databases for the FHIR data
