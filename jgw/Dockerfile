@@ -1,5 +1,7 @@
 FROM eclipse-temurin:11-jdk-alpine AS builder
 
+USER root
+
 ENV SRCDIR=/tmp/src
 ENV GWDIR=/jgw
 

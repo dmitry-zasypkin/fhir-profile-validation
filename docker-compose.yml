@@ -9,6 +9,7 @@ services:
       - ${JAVA_GATEWAY}:55555
     volumes:
       - ./profile:/irisdev/profile
+      - ./fhir-package-cache:/root/.fhir/packages
   iris:
     build: 
       context: .
