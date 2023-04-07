@@ -2,7 +2,6 @@ FROM eclipse-temurin:11-jdk-alpine AS builder
 
 ENV SRCDIR=/tmp/src
 ENV GWDIR=/jgw
-ENV PORT=55555
 
 COPY src $SRCDIR
 
