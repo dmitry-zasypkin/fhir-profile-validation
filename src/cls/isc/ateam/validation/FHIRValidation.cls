@@ -13,29 +13,31 @@ Parameter IGListKEY = "/FHIR/Validation/IGList";
 
 Parameter TerminologyServerKEY = "/FHIR/Validation/TerminologyServer";
 
-Parameter PatientProfileKEY = "/FHIR/Validation/PatientProfile";
+Parameter DefaultProfilePrefixKEY = "/FHIR/Validation/DefaultProfile/";
 
-ClassMethod validate(theResource As %DynamicObject)
+Parameter ConformanceAndTerminologyRESOURCES = {$lb("CapabilityStatement", "StructureDefinition", "OperationDefinition", "SearchParameter", "CompartmentDefinition", "ImplementationGuide", "CodeSystem", "ValueSet", "NamingSystem", "ConceptMap", "TerminologyCapabilities")};
+
+ClassMethod validate(theResource As %DynamicObject, isValidateOperation As %Boolean = {$$$NO}, profileToValidateAgainst As %String = "")
 {
-	#dim skipIfNoProfile As %String = ##class(HS.Registry.Config).GetKeyValue(..#SkipIfNoProfileKEY)
-	
-	#dim noProfile As %Boolean = ('theResource.%IsDefined("meta") || 'theResource.meta.%IsDefined("profile") || (theResource.meta.profile.%Size() = 0))
-	
-	// skipIfNoProfile: only validate if profile is specified within the resource
-	if +skipIfNoProfile && noProfile
+	// if we are not in $validate operation context, then we might skip validation in certain situations
+	if (isValidateOperation '= $$$YES)
 	{
-		quit
-	}
+		// skip validation for conformance and terminology resource types
+		if $listfind(..#ConformanceAndTerminologyRESOURCES, theResource.resourceType) quit
 	
-	// default Patient profile
-	#dim patientProfile As %String = ##class(HS.Registry.Config).GetKeyValue(..#PatientProfileKEY)
-	
-	#dim profileToValidateAgainst As %String = ""
-	if noProfile 
-			&& (theResource.resourceType = "Patient") 
-			&& (patientProfile '= "")
-	{
-		set profileToValidateAgainst = patientProfile
+		// if the profile is not specified either as an argument or within the resource...
+		if (profileToValidateAgainst = "") &&
+				('theResource.%IsDefined("meta") 
+					|| 'theResource.meta.%IsDefined("profile") 
+					|| (theResource.meta.profile.%Size() = 0)
+				)
+		{
+			// SkipIfNoProfile config: skip validation if no profile is specified within the resource
+			if +##class(HS.Registry.Config).GetKeyValue(..#SkipIfNoProfileKEY) quit
+
+			// get default profile(s) for the resource type (might not be configured)
+			set profileToValidateAgainst = ##class(HS.Registry.Config).GetKeyValue(..#DefaultProfilePrefixKEY _ theResource.resourceType)
+		}
 	}
 	
 	// run validation

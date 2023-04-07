@@ -15,7 +15,7 @@ Method ValidateResource(pResourceObject As %DynamicObject, pIsInTransaction As %
 	
 	if (pIsInTransaction '= $$$YES)
 	{
-		do ##class(isc.ateam.validation.FHIRValidation).validate(pResourceObject)
+		do ##class(isc.ateam.validation.FHIRValidation).validate(pResourceObject, $get(%isFHIRValidateOperation), $get(%FHIRValidateOperationProfileParam))
 	}
 }
 
