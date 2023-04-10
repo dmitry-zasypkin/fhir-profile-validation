@@ -20,7 +20,7 @@ services:
         FHIR_TERMINOLOGY_SERVER: ${FHIR_TERMINOLOGY_SERVER}
         FHIR_IG_LIST: /irisdev/profile
         DURABLE_SYS_DIR: /iris/durable
-        FHIR_ENDPOINT_TO_BE_CREATED: ${FHIR_ENDPOINT_TO_BE_CREATED}
+        FHIR_ENDPOINT: ${FHIR_ENDPOINT}
         NAMESPACE: ${NAMESPACE}
     restart: always
     command: --check-caps false

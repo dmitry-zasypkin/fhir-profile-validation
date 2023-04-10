@@ -5,7 +5,7 @@ ARG JAVA_GATEWAY_HOST
 ARG FHIR_TERMINOLOGY_SERVER
 ARG FHIR_IG_LIST
 ARG DURABLE_SYS_DIR
-ARG FHIR_ENDPOINT_TO_BE_CREATED
+ARG FHIR_ENDPOINT
 ARG NAMESPACE
 
 USER root
@@ -28,7 +28,7 @@ RUN \
   do $System.OBJ.Load("Installer.cls", "ck") \
   set repoRoot = $system.Process.CurrentDirectory() \
   set namespace = $System.Util.GetEnviron("NAMESPACE") \
-  set appKey = $System.Util.GetEnviron("FHIR_ENDPOINT_TO_BE_CREATED") \
+  set appKey = $System.Util.GetEnviron("FHIR_ENDPOINT") \
   set strategyClass = "isc.ateam.validation.FHIRValidationInteractionsStrategy" \
   set metadataPackages = $lb("hl7.fhir.r4.core@4.0.1") \
   set fhirValidationIGList = $System.Util.GetEnviron("FHIR_IG_LIST") \
