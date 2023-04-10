@@ -15,7 +15,11 @@ Method ValidateResource(pResourceObject As %DynamicObject, pIsInTransaction As %
 	
 	if (pIsInTransaction '= $$$YES)
 	{
-		do ##class(isc.ateam.validation.FHIRValidation).validate(pResourceObject, $get(%isFHIRValidateOperation), $get(%FHIRValidateOperationProfileParam))
+		// global variables %isFHIRValidateOperation and %FHIRValidateOperationProfileParam are set by isc.ateam.validation.FHIRValidateOperation class that implements $validate operation which respects 'profile' input parameter
+		do ##class(isc.ateam.validation.FHIRValidation).validate(
+			pResourceObject, 
+			$get(%isFHIRValidateOperation), 
+			$get(%FHIRValidateOperationProfileParam))
 	}
 }
 
