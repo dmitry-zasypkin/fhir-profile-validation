@@ -1,0 +1,7 @@
+{
+	"name": "isc.fhir.dummy-search-params",
+	"version": "1",
+	"dependencies": {
+		"hl7.fhir.r4.core": "4.0.1"
+	}
+}

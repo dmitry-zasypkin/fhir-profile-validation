@@ -1,0 +1,14 @@
+{
+	"resourceType": "SearchParameter",
+	"id": "Resource-dummy-profile",
+	"url": "urn:SearchParameter:Resource:dummy:profile",
+	"version": "4.0.1",
+	"name": "profile",
+	"status": "draft",
+	"code": "profile",
+	"base": [
+		"Resource"
+	],
+	"type": "uri",
+	"expression": "Resource.meta.profile"
+}
