@@ -23,9 +23,6 @@ ClassMethod setup(
 	// Change to the new ns
 	zn namespace
 
-	// Install elements that are required for a FHIR-enabled namespace
-	do ##class(HS.FHIRServer.Installer).InstallNamespace()
-
 	// Import sources
 	$$$QuitOnError($System.OBJ.LoadDir(repoRoot _ "/src/cls", "ck", ,1))
 
@@ -36,15 +33,18 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/TerminologyServer', :fhirValidationTerminologyServer))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', null))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/DefaultProfile/Patient', null))
-		
-	// Install an instance of a FHIR Service into the current namespace
-	do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages,,, 0)  // 0 = do not create separate databases for the FHIR data
 
-	// Configure FHIR Service instance to accept unauthenticated requests
-	#dim strategy As HS.FHIRServer.API.InteractionsStrategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(appKey)
-	set config = strategy.GetServiceConfigData()
-	set config.DebugMode = 4
-	do strategy.SaveServiceConfigData(config)
+	if (appKey '= "")
+	{	
+		// Install an instance of a FHIR Service into the current namespace
+		do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages,,, 0)  // 0 = do not create separate databases for the FHIR data
+
+		// Configure FHIR Service instance to accept unauthenticated requests
+		#dim strategy As HS.FHIRServer.API.InteractionsStrategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(appKey)
+		set config = strategy.GetServiceConfigData()
+		set config.DebugMode = 4
+		do strategy.SaveServiceConfigData(config)
+	}
 	
 	/*
 	// Load some FHIR data from either "fhirdata" or "data/fhir" directories
