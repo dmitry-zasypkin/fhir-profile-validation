@@ -18,7 +18,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 ## Testing with Postman
 1. Import [fhir-profile-validation.postman_collection.json](../main/postman/fhir-profile-validation.postman_collection.json) file into Postman.
 	* Adjust ```url``` variable defined in the collection.
-2. Use the requests defined in the Postman collection to validate Patient and Bundle resources by calling ```$validate``` operation, or by POSTing resources to FHIR Repository. 
+2. Use the requests from the Postman collection to validate Patient and Bundle resources by calling ```$validate``` operation, or by POSTing resources to FHIR Repository. 
 <p align="left"><img src="https://user-images.githubusercontent.com/13035460/231098465-75b0fa7e-f866-4a84-be9d-02b27b75d73e.png" alt="Postman Collection" width="250"/></p>
 
 
