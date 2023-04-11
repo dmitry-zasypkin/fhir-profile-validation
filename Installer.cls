@@ -6,7 +6,7 @@ ClassMethod setup(
 	namespace As %String,
 	appKey As %String,
 	strategyClass As %String,
-	metadataPackages As %List,
+	metadataPackageDirs As %List,
 	fhirValidationIGList As %String,
 	fhirValidationJavaGatewayServer As %String,
 	fhirValidationJavaGatewayPort As %String,
@@ -34,10 +34,14 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', null))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/DefaultProfile/Patient', null))
 
+	// Import additional FHIR packages
+	#dim packageList As %List = ""
+	if (metadataPackageDirs '= "") set packageList = ##class(HS.FHIRMeta.Load.NpmLoader).importPackages(metadataPackageDirs)
+
 	if (appKey '= "")
 	{	
 		// Install an instance of a FHIR Service into the current namespace
-		do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, metadataPackages,,, 0)  // 0 = do not create separate databases for the FHIR data
+		do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, $lb("hl7.fhir.r4.core@4.0.1") _ packageList,,, 0)  // 0 = do not create separate databases for the FHIR data
 
 		// Configure FHIR Service instance to accept unauthenticated requests
 		#dim strategy As HS.FHIRServer.API.InteractionsStrategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(appKey)

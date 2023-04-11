@@ -30,12 +30,12 @@ RUN \
   set namespace = $System.Util.GetEnviron("NAMESPACE") \
   set appKey = $System.Util.GetEnviron("FHIR_ENDPOINT") \
   set strategyClass = "isc.ateam.validation.FHIRValidationInteractionsStrategy" \
-  set metadataPackages = $lb("hl7.fhir.r4.core@4.0.1") \
+  set metadataPackageDirs = $select((+$System.Version.GetMajor() > 2023) || (($System.Version.GetMajor() = 2023) && (+$System.Version.GetMinor() >= 2)):"", 1:$lb(repoRoot _ "/src/search-params-package")) \
   set fhirValidationIGList = $System.Util.GetEnviron("FHIR_IG_LIST") \
   set fhirValidationJavaGatewayServer = $System.Util.GetEnviron("JAVA_GATEWAY_HOST") \
   set fhirValidationJavaGatewayPort = $System.Util.GetEnviron("JAVA_GATEWAY_PORT") \
   set fhirValidationTerminologyServer = $System.Util.GetEnviron("FHIR_TERMINOLOGY_SERVER") \
-  set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackages, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationTerminologyServer)
+  set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationTerminologyServer)
 
 # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
