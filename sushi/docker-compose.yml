@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  sushi:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./IG:/IG
+      - ../src:/src
+      - ../fhir-package-cache:/root/.fhir/packages
