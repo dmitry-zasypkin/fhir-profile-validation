@@ -23,7 +23,7 @@ services:
         FHIR_ENDPOINT: ${FHIR_ENDPOINT}
         NAMESPACE: ${NAMESPACE}
     restart: always
-    command: --check-caps false
+#    command: --check-caps false
     ports: 
       - 32782:1972
       - 32783:52773
