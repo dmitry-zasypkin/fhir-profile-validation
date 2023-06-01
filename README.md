@@ -45,8 +45,12 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	
 	[setup()](../main/Installer.cls#L4) method creates the specified namespace and database, imports classes from [src/cls](../main/src/cls) directory, creates and configures FHIR endpoint based on the specified interactions strategy class, and imports some settings into the [Configuration Registry](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/Doc.View.cls?KEY=HXREG_ch_configuration_registry) of IRIS. The settings are used by [isc.ateam.validation.FHIRValidation](../main/src/cls/isc/ateam/validation/FHIRValidation.cls) class at runtime.
 
+	<p align="center"><img src="https://github.com/dmitry-zasypkin/fhir-profile-validation/assets/13035460/a9584a2f-c872-434c-b5f9-d7800fef8bf0" alt="Configuration Registry" width="500"/></p>
+
+	If the ```tx.fhir.org``` terminology server turns out to be down during testing, you can replace it in the Configuration Registry with the address of another public FHIR terminology server by modifying the value of ```/FHIR/Validation/TerminologyServer``` setting. One commonly available server is ```https://r4.ontoserver.csiro.au/fhir/```.
+
 6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar, and save it to the ```jgw/lib``` subdirectory of the repo directory.
-7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Start the Java Gateway.
+7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Start the gateway.
 	| Setting             | Value                                     |
 	| ------------------- | ----------------------------------------- |
 	| Port                | 55555                                     |
