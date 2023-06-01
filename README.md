@@ -47,12 +47,12 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	[setup()](../main/Installer.cls#L4) method creates the specified namespace and database, imports classes from [src/cls](../main/src/cls) directory, creates and configures FHIR endpoint based on the specified interactions strategy class, and imports some settings into the Configuration Registry of IRIS. The settings are used by [isc.ateam.validation.FHIRValidation](../main/src/cls/isc/ateam/validation/FHIRValidation.cls) class at runtime.
 
 6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar to the ```jgw/lib``` subdirectory of the local repo dir.
-7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway:
-	| Setting             | Value                                 |
-	| ------------------- | ------------------------------------- |
-	| Port                | 55555                                 |
-	| Class Path          | C:\Git\fhir-profile-validation\lib\\* |
-	| Java Home Directory | <Full path to Java 11 JRE home>       |
+7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Save settings and start the Java Gateway.
+	| Setting             | Value                                     |
+	| ------------------- | ----------------------------------------- |
+	| Port                | 55555                                     |
+	| Class Path          | C:\Git\fhir-profile-validation\jgw\lib\\* |
+	| Java Home Directory | <Full path to Java 11 JRE home>           |
 
 ## Testing with Postman
 1. Import [fhir-profile-validation.postman_collection.json](../main/postman/fhir-profile-validation.postman_collection.json) file into Postman.
