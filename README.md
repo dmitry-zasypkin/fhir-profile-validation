@@ -16,23 +16,22 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	```
 
 ## Host Installation
-1. Install [InterSystems IRIS for Health](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls) 2022.1 or newer. Community Edition would be okay.
+1. Install [InterSystems IRIS for Health](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls) version 2022.1 or newer. The Community Edition is also acceptable.
 2. Install Java 11 JRE.
-3. Clone the repo into any local directory (```C:\Git\fhir-profile-validation``` in this example):
+3. Clone the repository into any local directory (```C:\Git\fhir-profile-validation``` in the following example):
 	```
 	C:\Git> git clone https://github.com/dmitry-zasypkin/fhir-profile-validation.git
 	```
 4. In IRIS terminal import [App.Installer](../main/Installer.cls) class into ```USER``` namespace:
 	```
-	XXX> zn "USER"
 	USER> do $System.OBJ.Load("C:\Git\fhir-profile-validation\Installer.cls", "ck")
 	```
-5. Run [setup()](../main/Installer.cls#L4) method of ```App.Installer``` class passing it a number of parameters, e.g.:
+5. Run [setup()](../main/Installer.cls#L4) method of ```App.Installer``` class passing it a number of parameters:
 	```
 	set repoRoot = "C:\Git\fhir-profile-validation\"
 	set namespace = "FHIRSERVER"                    // namespace to be created
 	set appKey = "/fhir-validation"                 // web app path for the FHIR endpoint to be created
-	set igList = repoRoot _ "profile"               // comma-separated list of directories or URLs containing FHIR profiles
+	set igList = repoRoot _ "profile"               // comma-separated list of directories containing FHIR profiles
 	set javaGatewayHost = "localhost"               // Java Gateway host
 	set javaGatewayPort = "55555"                   // Java Geteway port
 	set terminologyServer = "https://tx.fhir.org/"  // FHIR Terminology Server
@@ -44,10 +43,10 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	```
 	Note that items within ```igList``` comma-separated list may be any valid values of ```-ig``` command-line argument described in [FHIR Validator documentation](https://confluence.hl7.org/pages/viewpage.action?pageId=35718580#UsingtheFHIRValidator-LoadinganimplementationGuide). For example, you can pass a URL pointing to a gzipped tarball that contains FHIR profiles.
 	
-	[setup()](../main/Installer.cls#L4) method creates the specified namespace and database, imports classes from [src/cls](../main/src/cls) directory, creates and configures FHIR endpoint based on the specified interactions strategy class, and imports some settings into the Configuration Registry of IRIS. The settings are used by [isc.ateam.validation.FHIRValidation](../main/src/cls/isc/ateam/validation/FHIRValidation.cls) class at runtime.
+	[setup()](../main/Installer.cls#L4) method creates the specified namespace and database, imports classes from [src/cls](../main/src/cls) directory, creates and configures FHIR endpoint based on the specified interactions strategy class, and imports some settings into the [Configuration Registry](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/Doc.View.cls?KEY=HXREG_ch_configuration_registry) of IRIS. The settings are used by [isc.ateam.validation.FHIRValidation](../main/src/cls/isc/ateam/validation/FHIRValidation.cls) class at runtime.
 
-6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar to the ```jgw/lib``` subdirectory of the local repo dir.
-7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Save settings and start the Java Gateway.
+6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar, and save it to the ```jgw/lib``` subdirectory of the repo directory.
+7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Start the Java Gateway.
 	| Setting             | Value                                     |
 	| ------------------- | ----------------------------------------- |
 	| Port                | 55555                                     |
