@@ -35,11 +35,13 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	set javaGatewayHost = "localhost"               // Java Gateway host
 	set javaGatewayPort = "55555"                   // Java Geteway port
 	set terminologyServer = "https://tx.fhir.org/"  // FHIR Terminology Server
+	set fhirVersion = "4.0"                         // FHIR version
+	set fhirCorePackage = "hl7.fhir.r4.core@4.0.1"  // FHIR core package
 	set metadataPackageDirs = ""                    // this argument should only be used if you need to call $validate operation via HTTP GET and you are running on IRIS version prior to 2023.2
 	if (+$System.Version.GetMajor() < 2023) || (($System.Version.GetMajor() = 2023) && (+$System.Version.GetMinor() < 2)) set metadataPackageDirs = repoRoot _ "src\search-params-package"
 	set strategyClass = "isc.ateam.validation.FHIRValidationInteractionsStrategy"
 	  
-	zw ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, igList, javaGatewayHost, javaGatewayPort, terminologyServer)
+	zw ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, igList, javaGatewayHost, javaGatewayPort, terminologyServer, fhirVersion, fhirCorePackage)
 	```
 	Note that items within ```igList``` comma-separated list may be any valid values of ```-ig``` command-line argument described in [FHIR Validator documentation](https://confluence.hl7.org/pages/viewpage.action?pageId=35718580#UsingtheFHIRValidator-LoadinganimplementationGuide). For example, you can pass a URL pointing to a gzipped tarball that contains FHIR profiles.
 	
