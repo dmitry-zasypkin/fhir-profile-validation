@@ -47,7 +47,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	
 	[setup()](../main/Installer.cls#L4) method creates the specified namespace and database, imports classes from [src/cls](../main/src/cls) directory, creates and configures FHIR endpoint based on the specified interactions strategy class, and imports some settings into the [Configuration Registry](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/Doc.View.cls?KEY=HXREG_ch_configuration_registry) of IRIS. The settings are used by [isc.ateam.validation.FHIRValidation](../main/src/cls/isc/ateam/validation/FHIRValidation.cls) class at runtime.
 
-	<p align="center"><img src="https://github.com/dmitry-zasypkin/fhir-profile-validation/assets/13035460/a9584a2f-c872-434c-b5f9-d7800fef8bf0" alt="Configuration Registry" width="500"/></p>
+	<p align="center"><img src="https://github.com/dmitry-zasypkin/fhir-profile-validation/assets/13035460/f123b34d-026e-4516-b430-ac5696d4111f" alt="Configuration Registry" width="500"/></p>
 
 	If the ```tx.fhir.org``` terminology server turns out to be down during testing, you can replace it in the Configuration Registry with the address of another public FHIR terminology server by modifying the value of ```/FHIR/Validation/TerminologyServer``` setting. One commonly available server is ```https://r4.ontoserver.csiro.au/fhir/```.
 
