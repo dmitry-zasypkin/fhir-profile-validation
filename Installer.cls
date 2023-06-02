@@ -38,8 +38,21 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/FHIRVersion', :fhirVersion))
 
 	// Import additional FHIR packages
+	//   and prepare a list of additional packages for the FHIR Endpoint excluding those with a different FHIR version
 	#dim packageList As %List = ""
-	if (metadataPackageDirs '= "") set packageList = ##class(HS.FHIRMeta.Load.NpmLoader).importPackages(metadataPackageDirs)
+	if (metadataPackageDirs '= "")
+	{
+		#dim list As %List = ##class(HS.FHIRMeta.Load.NpmLoader).importPackages(metadataPackageDirs)
+		for i = 1:1:$listLength(list)
+		{
+			#dim pId As %String = $listGet(list, i)
+			#dim p As HS.FHIRMeta.Storage.Package = ##class(HS.FHIRMeta.Storage.Package).%OpenId(pId)
+			if $piece(p.coreVersion, ".", 1, 2) = $piece(fhirVersion, ".", 1, 2)
+			{
+				set packageList = packageList _ $lb(pId)
+			}
+		}
+	}
 
 	if (appKey '= "")
 	{	
