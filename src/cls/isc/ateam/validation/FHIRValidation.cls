@@ -15,6 +15,8 @@ Parameter TerminologyServerKEY = "/FHIR/Validation/TerminologyServer";
 
 Parameter DefaultProfilePrefixKEY = "/FHIR/Validation/DefaultProfile/";
 
+Parameter FhirVersionKEY = "/FHIR/Validation/FHIRVersion";
+
 Parameter ConformanceAndTerminologyRESOURCES = {$lb("CapabilityStatement", "StructureDefinition", "OperationDefinition", "SearchParameter", "CompartmentDefinition", "ImplementationGuide", "CodeSystem", "ValueSet", "NamingSystem", "ConceptMap", "TerminologyCapabilities")};
 
 ClassMethod validate(theResource As %DynamicObject, isValidateOperation As %Boolean = {$$$NO}, profileToValidateAgainst As %String = "")
@@ -66,6 +68,7 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	#dim javaGatewayServer As %String = ##class(HS.Registry.Config).GetKeyValue(..#JavaGatewayServerKEY)
 	#dim igList As %String = ##class(HS.Registry.Config).GetKeyValue(..#IGListKEY)
 	#dim terminologyServer As %String = ##class(HS.Registry.Config).GetKeyValue(..#TerminologyServerKEY)
+	#dim fhirVersion As %String = ##class(HS.Registry.Config).GetKeyValue(..#FhirVersionKEY)
 	
 	// check if Java Gateway is up
 	#dim sc As %Status = ##class(%Net.Remote.Service).PingGateway(javaGatewayPort, javaGatewayServer)
@@ -94,7 +97,7 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	try
 	{
 		$$$FSLog("About to call Java validator...")
-		set jsonOut = ##class(isc.ateam.validation.JavaValidatorFacade).validate(gw, igList, jsonIn, terminologyServer, profileToValidateAgainst)
+		set jsonOut = ##class(isc.ateam.validation.JavaValidatorFacade).validate(gw, igList, jsonIn, terminologyServer, profileToValidateAgainst, fhirVersion)
 	}
 	catch ex
 	{

@@ -10,7 +10,9 @@ ClassMethod setup(
 	fhirValidationIGList As %String,
 	fhirValidationJavaGatewayServer As %String,
 	fhirValidationJavaGatewayPort As %String,
-	fhirValidationTerminologyServer As %String) As %Status
+	fhirValidationTerminologyServer As %String,
+	fhirVersion As %String = "4.0",
+	fhirCorePackage As %String = "hl7.fhir.r4.core@4.0.1") As %Status
 {
 	new $namespace
 
@@ -33,6 +35,7 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/TerminologyServer', :fhirValidationTerminologyServer))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', null))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/DefaultProfile/Patient', null))
+	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/FHIRVersion', :fhirVersion))
 
 	// Import additional FHIR packages
 	#dim packageList As %List = ""
@@ -41,7 +44,7 @@ ClassMethod setup(
 	if (appKey '= "")
 	{	
 		// Install an instance of a FHIR Service into the current namespace
-		do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, $lb("hl7.fhir.r4.core@4.0.1") _ packageList,,, 0)  // 0 = do not create separate databases for the FHIR data
+		do ##class(HS.FHIRServer.Installer).InstallInstance(appKey, strategyClass, $lb(fhirCorePackage) _ packageList,,, 0)  // 0 = do not create separate databases for the FHIR data
 
 		// Configure FHIR Service instance to accept unauthenticated requests
 		#dim strategy As HS.FHIRServer.API.InteractionsStrategy = ##class(HS.FHIRServer.API.InteractionsStrategy).GetStrategyForEndpoint(appKey)

@@ -8,6 +8,7 @@ import org.hl7.fhir.r5.formats.JsonParser;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.r5.context.SystemOutLoggingService;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 
 public class JavaValidatorFacade
@@ -15,19 +16,26 @@ public class JavaValidatorFacade
     private static ValidationEngine validator;
     private static String IG;
     private static String terminologyServer;
-    
-    public static void init(String igList, String txServer) throws Throwable
+    private static String fhirVersion;
+
+    /**
+     * @param version    FHIR version, e.g. 4.0
+     */
+    public static void init(String igList, String txServer, String version) throws Throwable
     {
         validator = null;
         IG = null;
         terminologyServer = null;
+        fhirVersion = null;
         try 
         {
             if ((txServer != null) && (txServer.trim().length() == 0)) txServer = null;
             boolean canRunWithoutTerminologyServer = (txServer == null);
 
-            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder(null, null, "4.0", txServer, null, null, null, canRunWithoutTerminologyServer, new SystemOutLoggingService(), false);
-            validator = builder.fromSource("hl7.fhir.r4.core#4.0.1");
+            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder(null, null, version, txServer, null, null, null, canRunWithoutTerminologyServer, new SystemOutLoggingService(), false);
+
+            String corePackage = VersionUtilities.packageForVersion(version) + "#" + VersionUtilities.getCurrentVersion(version);
+            validator = builder.fromSource(corePackage);  // e.g. "hl7.fhir.r4.core#4.0.1"
 
             validator.setLevel(org.hl7.fhir.validation.cli.utils.ValidationLevel.ERRORS);
 
@@ -45,25 +53,31 @@ public class JavaValidatorFacade
 
             IG = igList;
             terminologyServer = txServer;
+            fhirVersion = version;
         }
         catch (Throwable e) 
         {
             validator = null;
             IG = null;
             terminologyServer = null;
+            fhirVersion = null;
             throw e;
         }
     }
 
-    public static byte[] validate(String igList, byte[] resourceBytes, String txServer, String profileList) throws Throwable
+    /**
+     * @param version    FHIR version, e.g. 4.0
+     */
+    public static byte[] validate(String igList, byte[] resourceBytes, String txServer, String profileList, String version) throws Throwable
     {
         if ((validator == null)
             || !igList.equals(IG) 
+            || !version.equals(fhirVersion)
             || (terminologyServer == null && txServer != null)
             || (terminologyServer != null && txServer == null)
             || (terminologyServer != null && !terminologyServer.equals(txServer)))
         {
-            init(igList, txServer);
+            init(igList, txServer, version);
         }
 
         String[] profiles = (profileList == null || profileList.length() == 0 ? new String[] {} : profileList.split(","));
@@ -73,15 +87,19 @@ public class JavaValidatorFacade
         return serializeToByteArray(r);
     }
 
-    public static byte[] validateFile(String igList, String resourceFilePath, String txServer, String profileList) throws Throwable
+    /**
+     * @param version    FHIR version, e.g. 4.0
+     */
+    public static byte[] validateFile(String igList, String resourceFilePath, String txServer, String profileList, String version) throws Throwable
     {
         if ((validator == null)
             || !igList.equals(IG) 
+            || !version.equals(fhirVersion)
             || (terminologyServer == null && txServer != null)
             || (terminologyServer != null && txServer == null)
             || (terminologyServer != null && !terminologyServer.equals(txServer)))
         {
-            init(igList, txServer);
+            init(igList, txServer, version);
         }
 
         String[] profiles = (profileList == null || profileList.length() == 0 ? new String[] {} : profileList.split(","));
@@ -110,7 +128,7 @@ public class JavaValidatorFacade
         String profileList = null;
         if (args.length > 3) profileList = args[3];
 
-        init(igList, txServer);
+        init(igList, txServer, "4.0");
 
         String[] profiles = (profileList == null || profileList.length() == 0 ? new String[] {} : profileList.split(","));
 

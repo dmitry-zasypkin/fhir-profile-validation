@@ -22,6 +22,8 @@ services:
         DURABLE_SYS_DIR: /iris/durable
         FHIR_ENDPOINT: ${FHIR_ENDPOINT}
         NAMESPACE: ${NAMESPACE}
+        FHIR_VERSION: ${FHIR_VERSION}
+        FHIR_CORE_PACKAGE: ${FHIR_CORE_PACKAGE}
     restart: always
 #    command: --check-caps false
     ports: 
