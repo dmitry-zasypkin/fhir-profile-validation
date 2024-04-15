@@ -89,23 +89,53 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 		do ##class(%Net.Remote.Java.JavaGateway).%ExpressImport("isc.ateam.validation.JavaValidatorFacade", javaGatewayPort, javaGatewayServer, $$$YES)
 	}
 
-	#dim jsonIn As %Stream.TmpBinary = ##class(%Stream.TmpBinary).%New()
-	do theResource.%ToJSON(jsonIn)
+	#dim jsonIn As %Stream.FileCharacter = ##class(%Stream.FileCharacter).%New()
+	set jsonIn.TranslateTable = "UTF8"
 
+	do theResource.%ToJSON(jsonIn)
+	set jsonIn.TranslateTable = "RAW"
+
+	#dim jsonInBin As %Stream.TmpBinary = ##class(%Stream.TmpBinary).%New()
+	do jsonInBin.CopyFrom(jsonIn)
+	kill jsonIn
+	
+	// memorize the current device
+	#dim oldIO = $io
+	#dim oldMnemonic As %String = ##class(%Device).GetMnemonicRoutine()
+	#dim oldIORedirected As %Boolean = ##class(%Device).ReDirectIO()
+	
+	$$$FSLog("About to call Java validator...")
+	
+	// redirect std output to null device
+	#dim dev As %String = $case($$$isWINDOWS, $$$YES:"//./nul", :"/dev/null")
+	open dev
+	use dev
+	
 	// run the validator
 	#dim jsonOut As %Stream.Object = ""
 	try
 	{
-		$$$FSLog("About to call Java validator...")
-		set jsonOut = ##class(isc.ateam.validation.JavaValidatorFacade).validate(gw, igList, jsonIn, terminologyServer, profileToValidateAgainst, fhirVersion)
+		set jsonOut = ##class(isc.ateam.validation.JavaValidatorFacade).validate(gw, igList, jsonInBin, terminologyServer, profileToValidateAgainst, fhirVersion)
 	}
 	catch ex
 	{
 		set sc = $get(%objlasterror)  // exception with Java stack here!
 		if (sc = "") set sc = ex.AsStatus()
 	}
+	close dev
 	
-	kill jsonIn
+	// revert back to normal
+	if (oldMnemonic '= "")
+	{
+		use oldIO::("^"_oldMnemonic)
+	}
+	else 
+	{
+		use oldIO
+	}
+	do ##class(%Device).ReDirectIO(oldIORedirected)
+	
+	kill jsonInBin
 	$$$ThrowOnError(sc)
 
 	#dim operationOutcome As %DynamicObject = {}.%FromJSON(jsonOut)
