@@ -90,6 +90,7 @@ public class JavaValidatorFacade
     /**
      * @param version    FHIR version, e.g. 4.0
      */
+    /* 
     public static byte[] validateFile(String igList, String resourceFilePath, String txServer, String profileList, String version) throws Throwable
     {
         if ((validator == null)
@@ -108,6 +109,7 @@ public class JavaValidatorFacade
 
         return serializeToByteArray(r);
     }
+    */
 
     private static byte[] serializeToByteArray(Resource r) throws Throwable
     {
@@ -117,6 +119,7 @@ public class JavaValidatorFacade
         return os.toByteArray();
     }
 
+    /*
     public static void main(String[] args) throws Throwable
     {
         String igList = args[0];
@@ -140,6 +143,7 @@ public class JavaValidatorFacade
         System.out.println(serialize(r));
         System.out.println();
     }
+    */
 
     private static String serialize(Resource r) throws Throwable
     {
