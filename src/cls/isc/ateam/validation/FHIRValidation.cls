@@ -138,9 +138,17 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	kill jsonInBin
 	$$$ThrowOnError(sc)
 
-	#dim operationOutcome As %DynamicObject = {}.%FromJSON(jsonOut)
+	
+	#dim jsonOutChar As %Stream.FileCharacter = ##class(%Stream.FileCharacter).%New()
+	set jsonOutChar.TranslateTable = "RAW"
+
+	do jsonOutChar.CopyFrom(jsonOut)
+	kill jsonOut
+	
+	set jsonOutChar.TranslateTable = "UTF8"
+
+	#dim operationOutcome As %DynamicObject = {}.%FromJSON(jsonOutChar)
 	quit operationOutcome
 }
 
 }
-
