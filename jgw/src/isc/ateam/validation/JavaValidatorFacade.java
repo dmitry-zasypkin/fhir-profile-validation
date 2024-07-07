@@ -32,7 +32,7 @@ public class JavaValidatorFacade
             if ((txServer != null) && (txServer.trim().length() == 0)) txServer = null;
             boolean canRunWithoutTerminologyServer = (txServer == null);
 
-            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder(null, null, version, txServer, null, null, null, canRunWithoutTerminologyServer, new SystemOutLoggingService(), false);
+            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder(null, null, version, txServer, null, null, false, null, canRunWithoutTerminologyServer, new SystemOutLoggingService(), false);
 
             String corePackage = VersionUtilities.packageForVersion(version) + "#" + VersionUtilities.getCurrentVersion(version);
             validator = builder.fromSource(corePackage);  // e.g. "hl7.fhir.r4.core#4.0.1"
