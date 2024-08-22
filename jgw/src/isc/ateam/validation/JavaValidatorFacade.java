@@ -11,6 +11,19 @@ import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 
+import org.hl7.fhir.validation.instance.InstanceValidator;
+import org.hl7.fhir.validation.instance.BasePolicyAdvisorForFullValidation;
+import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
+import org.hl7.fhir.r5.model.OperationOutcome;
+import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
+import org.hl7.fhir.utilities.i18n.I18nConstants;
+import org.hl7.fhir.r5.renderers.utils.RenderingContext;
+import org.hl7.fhir.r5.renderers.utils.RenderingContext.GenerationRules;
+import org.hl7.fhir.r5.renderers.utils.ResourceWrapper;
+import org.hl7.fhir.r5.renderers.RendererFactory;
+
 public class JavaValidatorFacade
 {
     private static ValidationEngine validator;
@@ -82,9 +95,45 @@ public class JavaValidatorFacade
 
         String[] profiles = (profileList == null || profileList.length() == 0 ? new String[] {} : profileList.split(","));
 
-        Resource r = validator.validate(resourceBytes, FhirFormat.JSON, Arrays.asList(profiles), new ArrayList<ValidationMessage>());
+        //Resource r = validator.validate(resourceBytes, FhirFormat.JSON, Arrays.asList(profiles), new ArrayList<ValidationMessage>());
+
+        InstanceValidator instanceValidator = validator.getValidator(FhirFormat.JSON);
+        instanceValidator.setPolicyAdvisor(new BasePolicyAdvisorForFullValidation(ReferenceValidationPolicy.IGNORE));
+        List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+        instanceValidator.validate(null, messages, new ByteArrayInputStream(resourceBytes), FhirFormat.JSON, validator.asSdList(Arrays.asList(profiles)));
+        Resource r = messagesToOutcome(messages, validator.getContext(), validator.getFhirPathEngine());
 
         return serializeToByteArray(r);
+    }
+
+    private static OperationOutcome messagesToOutcome(List<ValidationMessage> messages, SimpleWorkerContext context, FHIRPathEngine fpe) throws Throwable
+    {
+        OperationOutcome op = new OperationOutcome();
+        for (ValidationMessage vm : filterMessages(messages)) {
+            try {
+                fpe.parse(vm.getLocation());
+            } catch (Exception e) {
+                System.out.println("Internal error in location for message: '" + e.getMessage() + "', loc = '" + vm.getLocation() + "', err = '" + vm.getMessage() + "'");
+            }
+            op.getIssue().add(OperationOutcomeUtilities.convertToIssue(vm, op));
+        }
+        if (!op.hasIssue()) {
+            op.addIssue().setSeverity(OperationOutcome.IssueSeverity.INFORMATION).setCode(OperationOutcome.IssueType.INFORMATIONAL).getDetails().setText(context.formatMessage(I18nConstants.ALL_OK));
+        }
+        RenderingContext rc = new RenderingContext(context, null, null, "http://hl7.org/fhir", "", null, RenderingContext.ResourceRendererMode.END_USER, GenerationRules.VALID_RESOURCE);
+        RendererFactory.factory(op, rc).renderResource(ResourceWrapper.forResource(rc.getContextUtilities(), op));
+        return op;
+    }
+
+    private static List<ValidationMessage> filterMessages(List<ValidationMessage> messages) 
+    {
+        List<ValidationMessage> filteredValidation = new ArrayList<ValidationMessage>();
+        for (ValidationMessage e : messages) {
+            if (!filteredValidation.contains(e))
+                filteredValidation.add(e);
+        }
+        filteredValidation.sort(null);
+        return filteredValidation;
     }
 
     /**
@@ -119,7 +168,6 @@ public class JavaValidatorFacade
         return os.toByteArray();
     }
 
-    /*
     public static void main(String[] args) throws Throwable
     {
         String igList = args[0];
@@ -135,7 +183,15 @@ public class JavaValidatorFacade
 
         String[] profiles = (profileList == null || profileList.length() == 0 ? new String[] {} : profileList.split(","));
 
-        Resource r = validator.validate(source, Arrays.asList(profiles));
+        byte[] resourceBytes = java.nio.file.Files.readAllBytes(new File(source).toPath());
+
+        //Resource r = validator.validate(resourceBytes, FhirFormat.JSON, Arrays.asList(profiles), new ArrayList<ValidationMessage>());
+
+        InstanceValidator instanceValidator = validator.getValidator(FhirFormat.JSON);
+        instanceValidator.setPolicyAdvisor(new BasePolicyAdvisorForFullValidation(ReferenceValidationPolicy.IGNORE));
+        List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+        instanceValidator.validate(null, messages, new ByteArrayInputStream(resourceBytes), FhirFormat.JSON, validator.asSdList(Arrays.asList(profiles)));
+        Resource r = messagesToOutcome(messages, validator.getContext(), validator.getFhirPathEngine());
 
         System.out.println();
         displayValidationResult(r);
@@ -143,7 +199,6 @@ public class JavaValidatorFacade
         System.out.println(serialize(r));
         System.out.println();
     }
-    */
 
     private static String serialize(Resource r) throws Throwable
     {
