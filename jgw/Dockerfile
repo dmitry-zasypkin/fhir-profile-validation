@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jdk-alpine AS builder
+FROM eclipse-temurin:11-jdk AS builder
 
 USER root
 
@@ -17,7 +17,7 @@ RUN javac -classpath $GWDIR/* isc/ateam/validation/JavaValidatorFacade.java && \
     ls -al isc/ateam/validation
 
 
-FROM eclipse-temurin:11-jre-alpine
+FROM eclipse-temurin:11-jre
 
 ENV GWDIR=/jgw
 ENV PORT=55555
