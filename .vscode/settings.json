@@ -1,5 +1,9 @@
 {
     "objectscript.conn": {
-        "active": true
+        "active": true,
+        "ns": "FHIRSERVER",
+        "docker-compose": {
+            "service": "iris"
+        }
     }
 }
