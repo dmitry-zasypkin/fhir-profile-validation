@@ -10,6 +10,7 @@ ClassMethod setup(
 	fhirValidationIGList As %String,
 	fhirValidationJavaGatewayServer As %String,
 	fhirValidationJavaGatewayPort As %String,
+	fhirValidationJavaGatewayName As %String,
 	fhirValidationTerminologyServer As %String,
 	fhirVersion As %String = "4.0",
 	fhirCorePackage As %String = "hl7.fhir.r4.core@4.0.1") As %Status
@@ -32,6 +33,7 @@ ClassMethod setup(
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/IGList', :fhirValidationIGList))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/JavaGatewayServer', :fhirValidationJavaGatewayServer))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/JavaGatewayPort', :fhirValidationJavaGatewayPort))
+	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/JavaGatewayName', :fhirValidationJavaGatewayName))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/TerminologyServer', :fhirValidationTerminologyServer))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/SkipIfNoProfile', null))
 	&sql(INSERT INTO HS_Registry.Config(RegKey, RegValue) VALUES ('/FHIR/Validation/DefaultProfile/Patient', null))

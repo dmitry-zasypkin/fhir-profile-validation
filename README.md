@@ -34,6 +34,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	set igList = repoRoot _ "profile"               // comma-separated list of directories containing FHIR profiles
 	set javaGatewayHost = "localhost"               // Java Gateway host
 	set javaGatewayPort = "55555"                   // Java Geteway port
+	set javaGatewayName = "%Java Server"            // Java Geteway name
 	set terminologyServer = "https://tx.fhir.org/"  // FHIR Terminology Server
 	set fhirVersion = "4.0"                         // FHIR version
 	set fhirCorePackage = "hl7.fhir.r4.core@4.0.1"  // FHIR core package
@@ -41,7 +42,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	if (+$System.Version.GetMajor() < 2023) || (($System.Version.GetMajor() = 2023) && (+$System.Version.GetMinor() < 2)) set metadataPackageDirs = repoRoot _ "src\search-params-package"
 	set strategyClass = "isc.ateam.validation.FHIRValidationInteractionsStrategy"
 	  
-	zw ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, igList, javaGatewayHost, javaGatewayPort, terminologyServer, fhirVersion, fhirCorePackage)
+	zw ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, igList, javaGatewayHost, javaGatewayPort, javaGatewayName, terminologyServer, fhirVersion, fhirCorePackage)
 	```
 	Note that items within ```igList``` comma-separated list may be any valid values of ```-ig``` command-line argument described in [FHIR Validator documentation](https://confluence.hl7.org/pages/viewpage.action?pageId=35718580#UsingtheFHIRValidator-LoadinganimplementationGuide). For example, you can pass a URL pointing to a gzipped tarball that contains FHIR profiles.
 	
@@ -52,7 +53,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 	If the ```tx.fhir.org``` terminology server turns out to be down during testing, you can replace it in the Configuration Registry with the address of another public FHIR terminology server by modifying the value of ```/FHIR/Validation/TerminologyServer``` setting. One commonly available server is ```https://r4.ontoserver.csiro.au/fhir/```.
 
 6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library (version 6.6.3+) from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar, and save it to the ```jgw/lib``` subdirectory of the repo directory.
-7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Start the gateway.
+7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway, or alternatively, create a new External Language Server of type ```Java``` with the appropriate settings. Start the gateway.
 	| Setting             | Value                                     |
 	| ------------------- | ----------------------------------------- |
 	| Port                | 55555                                     |
