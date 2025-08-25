@@ -17,6 +17,8 @@ Parameter DefaultProfilePrefixKEY = "/FHIR/Validation/DefaultProfile/";
 
 Parameter FhirVersionKEY = "/FHIR/Validation/FHIRVersion";
 
+Parameter JavaGatewayNameKEY = "/FHIR/Validation/JavaGatewayName";
+
 Parameter ConformanceAndTerminologyRESOURCES = {$lb("CapabilityStatement", "StructureDefinition", "OperationDefinition", "SearchParameter", "CompartmentDefinition", "ImplementationGuide", "CodeSystem", "ValueSet", "NamingSystem", "ConceptMap", "TerminologyCapabilities")};
 
 ClassMethod validate(theResource As %DynamicObject, isValidateOperation As %Boolean = {$$$NO}, profileToValidateAgainst As %String = "")
@@ -74,8 +76,10 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	#dim sc As %Status = ##class(%Net.Remote.Service).PingGateway(javaGatewayPort, javaGatewayServer)
 	if $$$ISERR(sc)
 	{
+		#dim javaGatewayName As %String = ##class(HS.Registry.Config).GetKeyValue(..#JavaGatewayNameKEY)
+		if (javaGatewayName="") Throw $$$ERROR($$$GeneralError, "Missing Configuration Registry value for: " _ ..#JavaGatewayNameKEY)
 		// assuming this is local gateway, try to start it
-		$$$ThrowOnError(##class(%Net.Remote.Service).StartGateway("%Java Server"))
+		$$$ThrowOnError(##class(%Net.Remote.Service).StartGateway(javaGatewayName))
 		set sc = $$$OK
 	}
 
