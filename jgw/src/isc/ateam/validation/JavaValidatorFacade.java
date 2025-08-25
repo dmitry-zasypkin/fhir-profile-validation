@@ -5,16 +5,15 @@ import java.io.*;
 import org.hl7.fhir.validation.*;
 import org.hl7.fhir.r5.model.*;
 import org.hl7.fhir.r5.formats.JsonParser;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
-import org.hl7.fhir.r5.context.SystemOutLoggingService;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 
 import org.hl7.fhir.validation.instance.InstanceValidator;
-import org.hl7.fhir.validation.instance.BasePolicyAdvisorForFullValidation;
+import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
-import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
@@ -43,14 +42,15 @@ public class JavaValidatorFacade
         try 
         {
             if ((txServer != null) && (txServer.trim().length() == 0)) txServer = null;
-            boolean canRunWithoutTerminologyServer = (txServer == null);
 
-            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder(null, null, version, txServer, null, null, false, null, canRunWithoutTerminologyServer, new SystemOutLoggingService(), false);
+            ValidationEngine.ValidationEngineBuilder builder = new ValidationEngine.ValidationEngineBuilder()
+                .withVersion(version);
+            builder = (txServer != null) ? builder.withTxServer(txServer, null, null, true) : builder.withNoTerminologyServer();
 
             String corePackage = VersionUtilities.packageForVersion(version) + "#" + VersionUtilities.getCurrentVersion(version);
             validator = builder.fromSource(corePackage);  // e.g. "hl7.fhir.r4.core#4.0.1"
 
-            validator.setLevel(org.hl7.fhir.validation.cli.utils.ValidationLevel.ERRORS);
+            validator.setLevel(org.hl7.fhir.validation.service.utils.ValidationLevel.ERRORS);
 
             if (igList != null && igList.length() > 0)
             {
@@ -245,8 +245,8 @@ public class JavaValidatorFacade
         String loc;
         if (issue.hasExpression())
         {
-            int line = ToolingExtensions.readIntegerExtension(issue, ToolingExtensions.EXT_ISSUE_LINE, -1);
-            int col = ToolingExtensions.readIntegerExtension(issue, ToolingExtensions.EXT_ISSUE_COL, -1);
+            int line = ExtensionUtilities.readIntegerExtension(issue, ExtensionDefinitions.EXT_ISSUE_LINE, -1);
+            int col = ExtensionUtilities.readIntegerExtension(issue, ExtensionDefinitions.EXT_ISSUE_COL, -1);
             loc = issue.getExpression().get(0).asStringValue() + (line >= 0 && col >= 0 ? " (line " + Integer.toString(line) + ", col" + Integer.toString(col) + ")" : "");
         }
         else if (issue.hasLocation()) 
@@ -255,8 +255,8 @@ public class JavaValidatorFacade
         }
         else 
         {
-            int line = ToolingExtensions.readIntegerExtension(issue, ToolingExtensions.EXT_ISSUE_LINE, -1);
-            int col = ToolingExtensions.readIntegerExtension(issue, ToolingExtensions.EXT_ISSUE_COL, -1);
+            int line = ExtensionUtilities.readIntegerExtension(issue, ExtensionDefinitions.EXT_ISSUE_LINE, -1);
+            int col = ExtensionUtilities.readIntegerExtension(issue, ExtensionDefinitions.EXT_ISSUE_COL, -1);
             loc = (line >= 0 && col >= 0 ? "line " + Integer.toString(line) + ", col" + Integer.toString(col) : "??");
         }
  

@@ -17,7 +17,7 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 
 ## Host Installation
 1. Install [InterSystems IRIS for Health](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls) version 2022.1 or newer. The Community Edition is also acceptable.
-2. Install Java 11 JRE.
+2. Install Java 17 JRE.
 3. Clone the repository into any local directory (```C:\Git\fhir-profile-validation``` in the following example):
 	```
 	C:\Git> git clone https://github.com/dmitry-zasypkin/fhir-profile-validation.git
@@ -51,13 +51,13 @@ Validating FHIR resources against profiles in FHIR Resource Repository of [Inter
 
 	If the ```tx.fhir.org``` terminology server turns out to be down during testing, you can replace it in the Configuration Registry with the address of another public FHIR terminology server by modifying the value of ```/FHIR/Validation/TerminologyServer``` setting. One commonly available server is ```https://r4.ontoserver.csiro.au/fhir/```.
 
-6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar, and save it to the ```jgw/lib``` subdirectory of the repo directory.
+6. Download [FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-Downloadingthevalidator) library (version 6.6.3+) from https://github.com/hapifhir/org.hl7.fhir.core/releases/latest/download/validator_cli.jar, and save it to the ```jgw/lib``` subdirectory of the repo directory.
 7. Open IRIS Portal and browse to ```System Administration``` > ```Configuration``` > ```Connectivity``` > ```External Language Servers``` page. Modify the following settings of ```%Java Server``` gateway. Start the gateway.
 	| Setting             | Value                                     |
 	| ------------------- | ----------------------------------------- |
 	| Port                | 55555                                     |
 	| Class Path          | C:\Git\fhir-profile-validation\jgw\lib\\* |
-	| Java Home Directory | <Full path to Java 11 JRE home>           |
+	| Java Home Directory | <Full path to Java 17 JRE home>           |
 
 ## Testing with Postman
 1. Import [fhir-profile-validation.postman_collection.json](../main/postman/fhir-profile-validation.postman_collection.json) file into Postman.
