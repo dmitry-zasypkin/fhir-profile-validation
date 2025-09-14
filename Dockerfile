@@ -36,10 +36,11 @@ RUN \
   set fhirValidationIGList = $System.Util.GetEnviron("FHIR_IG_LIST") \
   set fhirValidationJavaGatewayServer = $System.Util.GetEnviron("JAVA_GATEWAY_HOST") \
   set fhirValidationJavaGatewayPort = $System.Util.GetEnviron("JAVA_GATEWAY_PORT") \
+  set fhirValidationJavaGatewayName = "%Java Server" \
   set fhirValidationTerminologyServer = $System.Util.GetEnviron("FHIR_TERMINOLOGY_SERVER") \
   set fhirVersion = $System.Util.GetEnviron("FHIR_VERSION") \
   set fhirCorePackage = $System.Util.GetEnviron("FHIR_CORE_PACKAGE") \
-  set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationTerminologyServer, fhirVersion, fhirCorePackage)
+  set sc = ##class(App.Installer).setup(repoRoot, namespace, appKey, strategyClass, metadataPackageDirs, fhirValidationIGList, fhirValidationJavaGatewayServer, fhirValidationJavaGatewayPort, fhirValidationJavaGatewayName, fhirValidationTerminologyServer, fhirVersion, fhirCorePackage)
 
 # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
