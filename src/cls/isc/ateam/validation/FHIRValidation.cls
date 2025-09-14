@@ -77,7 +77,8 @@ ClassMethod validateAgainstProfile(theResource As %DynamicObject, profileToValid
 	if $$$ISERR(sc)
 	{
 		#dim javaGatewayName As %String = ##class(HS.Registry.Config).GetKeyValue(..#JavaGatewayNameKEY)
-		if (javaGatewayName="") Throw $$$ERROR($$$GeneralError, "Missing Configuration Registry value for: " _ ..#JavaGatewayNameKEY)
+		if (javaGatewayName="") $$$ThrowStatus($$$ERROR($$$GeneralError, "Missing Configuration Registry value for: " _ ..#JavaGatewayNameKEY))
+
 		// assuming this is local gateway, try to start it
 		$$$ThrowOnError(##class(%Net.Remote.Service).StartGateway(javaGatewayName))
 		set sc = $$$OK
