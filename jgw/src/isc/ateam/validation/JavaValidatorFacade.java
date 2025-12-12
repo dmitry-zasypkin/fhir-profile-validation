@@ -98,7 +98,12 @@ public class JavaValidatorFacade
         //Resource r = validator.validate(resourceBytes, FhirFormat.JSON, Arrays.asList(profiles), new ArrayList<ValidationMessage>());
 
         InstanceValidator instanceValidator = validator.getValidator(FhirFormat.JSON);
-        instanceValidator.setPolicyAdvisor(new BasePolicyAdvisorForFullValidation(ReferenceValidationPolicy.IGNORE));
+        instanceValidator.setPolicyAdvisor(
+            new BasePolicyAdvisorForFullValidation(
+                ReferenceValidationPolicy.IGNORE,
+                Collections.<String>emptySet()
+            )
+        );
         List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
         instanceValidator.validate(null, messages, new ByteArrayInputStream(resourceBytes), FhirFormat.JSON, validator.asSdList(Arrays.asList(profiles)));
         Resource r = messagesToOutcome(messages, validator.getContext(), validator.getFhirPathEngine());
@@ -188,7 +193,12 @@ public class JavaValidatorFacade
         //Resource r = validator.validate(resourceBytes, FhirFormat.JSON, Arrays.asList(profiles), new ArrayList<ValidationMessage>());
 
         InstanceValidator instanceValidator = validator.getValidator(FhirFormat.JSON);
-        instanceValidator.setPolicyAdvisor(new BasePolicyAdvisorForFullValidation(ReferenceValidationPolicy.IGNORE));
+        instanceValidator.setPolicyAdvisor(
+            new BasePolicyAdvisorForFullValidation(
+                ReferenceValidationPolicy.IGNORE,
+                Collections.<String>emptySet()
+            )
+        );
         List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
         instanceValidator.validate(null, messages, new ByteArrayInputStream(resourceBytes), FhirFormat.JSON, validator.asSdList(Arrays.asList(profiles)));
         Resource r = messagesToOutcome(messages, validator.getContext(), validator.getFhirPathEngine());
